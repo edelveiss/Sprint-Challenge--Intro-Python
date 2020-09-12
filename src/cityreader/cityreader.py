@@ -1,6 +1,14 @@
 # Create a class to hold a city location. Call the class "City". It should have
 # fields for name, lat and lon (representing latitude and longitude).
+import csv
+class City:
+  def __init__(self, name, lat, lon):
+    self.name = name
+    self.lat = lat
+    self.lon = lon
 
+  def __str__(self):
+    return f"City name: {self.name}, lat: {self.lat}, lon: {self.lon}"
 
 # We have a collection of US cities with population over 750,000 stored in the
 # file "cities.csv". (CSV stands for "comma-separated values".)
@@ -17,11 +25,13 @@
 cities = []
 
 def cityreader(cities=[]):
-  # TODO Implement the functionality to read from the 'cities.csv' file
-  # Ensure that the lat and lon valuse are all floats
-  # For each city record, create a new City instance and add it to the 
-  # `cities` list
-    
+  with open('cities.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter = ',')
+    line_count = 0
+    for row in csv_reader:
+      if line_count != 0:
+        cities.append(City(row[0], float(row[3]), float(row[4])))
+      line_count +=1
     return cities
 
 cityreader(cities)
@@ -60,12 +70,28 @@ for c in cities:
 # Salt Lake City: (40.7774,-111.9301)
 
 # TODO Get latitude and longitude values from the user
+# user_input1 = input("Enter the first pair of (lat,lon): ")
+# user_input2 = input("Enter the second pair of (lat,lon): ")
+# lat1,lon1 = eval(user_input1)
+# lat2, lon2 = eval(user_input2)
+print('-'*60)
+user_input1 = input("Enter the first pair of lat,lon: ").split(",")
+user_input2 = input("Enter the second pair of lat,lon: ").split(",")
+lat1 = float(user_input1[0])
+lon1 = float(user_input1[1])
+lat2 = float(user_input2[0])
+lon2 = float(user_input2[1])
+
 
 def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
   # within will hold the cities that fall within the specified region
-  within = []
-  
-  # Go through each city and check to see if it falls within 
-  # the specified coordinates.
+  within = [city for city in cities if city.lat >= min(lat1,lat2) and (city.lat <= max(lat1,lat2) and city.lon >=min(lon1, lon2) and city.lon <= max(lon1, lon2)) ]
 
   return within
+print('-'*60)
+choosen_cities = []
+choosen_cities = cityreader_stretch(lat1, lon1, lat2, lon2, cities)
+for city in choosen_cities:
+  print(city)
+  
+print('-'*60)
